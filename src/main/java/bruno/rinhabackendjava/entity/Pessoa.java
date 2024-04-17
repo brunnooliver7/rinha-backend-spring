@@ -1,11 +1,11 @@
-package bruno.rinhabackendjava.model;
+package bruno.rinhabackendjava.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
+import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -19,7 +19,8 @@ import java.util.UUID;
 public class Pessoa {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(generator = "uuid-hibernate-generator")
+    @GenericGenerator(name = "uuid-hibernate-generator", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
     @Column(unique = true, nullable = false)

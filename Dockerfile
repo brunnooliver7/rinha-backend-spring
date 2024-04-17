@@ -1,5 +1,5 @@
 # Escolha a imagem base
-FROM maven:3.8.4-openjdk-17-slim AS build
+FROM maven:3.8.4-openjdk-11-slim AS build
 
 # Defina o diretório de trabalho
 WORKDIR /app
@@ -17,7 +17,7 @@ COPY src ./src
 RUN mvn clean install
 
 # Usando uma imagem base mínima do OpenJDK para reduzir o tamanho final da imagem
-FROM openjdk:17-jdk-slim
+FROM openjdk:11-jdk-slim
 
 # Copia o arquivo JAR da fase anterior da construção para a imagem final
 COPY --from=build /app/target/rinha-backend-java-0.0.1-SNAPSHOT.jar /app/
