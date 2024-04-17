@@ -1,6 +1,6 @@
 package bruno.rinhabackendjava.service;
 
-import bruno.rinhabackendjava.model.Pessoa;
+import bruno.rinhabackendjava.entity.Pessoa;
 import bruno.rinhabackendjava.repository.PessoaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,11 +18,19 @@ public class PessoaService {
         return pessoaRepository.findById(id).orElseThrow();
     }
 
+    public Boolean apelidoExiste(String apelido) {
+        return pessoaRepository.existsByApelido(apelido);
+    }
+
     public List<Pessoa> obterListaPessoaPorTermo(String termo) {
         return pessoaRepository.findByTermo(termo);
     }
 
     public Pessoa criarPessoa(Pessoa pessoa) {
-        return pessoaRepository.save(pessoa);
+        return pessoaRepository.salvar(pessoa);
+    }
+
+    public long countPessoas() {
+        return pessoaRepository.count();
     }
 }
