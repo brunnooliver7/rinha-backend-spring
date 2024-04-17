@@ -1,6 +1,6 @@
 package bruno.rinhabackendjava.repository;
 
-import bruno.rinhabackendjava.model.Pessoa;
+import bruno.rinhabackendjava.entity.Pessoa;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -14,18 +14,12 @@ import java.util.UUID;
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
 
-    @Query(value = """
-            SELECT p.*
-            FROM pessoa p
-            WHERE LOWER(p.apelido) LIKE LOWER(CONCAT('%', :termo, '%'))
-               OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :termo, '%'))
-               OR EXISTS (
-                  SELECT 1
-                  FROM pessoa_stack s
-                  WHERE s.pessoa_id = p.id
-                    AND LOWER(s.stack) LIKE LOWER(CONCAT('%', :termo, '%'))
-               )
-                                        """, nativeQuery = true)
+    @Query(value = " SELECT p.* " +
+            "FROM pessoa p " +
+            "WHERE LOWER(p.apelido) LIKE LOWER(CONCAT('%', :termo, '%')) " +
+            "OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :termo, '%'))" +
+            "OR LOWER(p.stack) LIKE LOWER(CONCAT('%', :termo, '%'))",
+            nativeQuery = true)
     List<Pessoa> findByTermo(@Param("termo") String termo);
 
     @Lock(LockModeType.OPTIMISTIC)
