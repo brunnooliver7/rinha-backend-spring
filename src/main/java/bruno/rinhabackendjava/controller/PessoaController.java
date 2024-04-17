@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,9 +22,10 @@ public class PessoaController {
     private final PessoaMapper mapper;
 
     @GetMapping("/pessoas/{id}")
-    public ResponseEntity<Pessoa> obterPessoaPorId(@PathVariable UUID id) {
+    public ResponseEntity<PessoaDTO> obterPessoaPorId(@PathVariable UUID id) {
         try {
-            return new ResponseEntity<>(pessoaService.obterPessoaPorId(id), HttpStatus.OK);
+            Pessoa pessoa = service.obterPessoaPorId(id);
+            return new ResponseEntity<>(mapper.toDTO(pessoa), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -36,13 +38,20 @@ public class PessoaController {
     }
 
     @GetMapping("/contagem-pessoas")
-    public String contagem() {
-        return null;
+    public long contagem() {
+        return service.countPessoas();
     }
 
     @PostMapping("/pessoas")
-    public ResponseEntity<Pessoa> criarPessoa(@RequestBody Pessoa pessoa) {
-        Pessoa pessoaSalva = pessoaService.criarPessoa(pessoa);
+    public ResponseEntity<PessoaDTO> criarPessoa(@RequestBody @Valid PessoaDTO dto) {
+        if (Boolean.TRUE.equals(service.apelidoExiste(dto.getApelido()))) {
+            return ResponseEntity
+                    .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(null);
+        }
+
+        Pessoa pessoa = mapper.fromDTO(dto);
+        Pessoa pessoaSalva = service.criarPessoa(pessoa);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
