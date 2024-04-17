@@ -1,6 +1,8 @@
 package bruno.rinhabackendjava.controller;
 
-import bruno.rinhabackendjava.model.Pessoa;
+import bruno.rinhabackendjava.dto.PessoaDTO;
+import bruno.rinhabackendjava.entity.Pessoa;
+import bruno.rinhabackendjava.mapper.PessoaMapper;
 import bruno.rinhabackendjava.service.PessoaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +17,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PessoaController {
 
-    private final PessoaService pessoaService;
+    private final PessoaService service;
+    private final PessoaMapper mapper;
 
     @GetMapping("/pessoas/{id}")
     public ResponseEntity<Pessoa> obterPessoaPorId(@PathVariable UUID id) {
@@ -27,9 +30,9 @@ public class PessoaController {
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<List<Pessoa>> obterPessoaPorTermo(@RequestParam(name = "t") String termo) {
-        List<Pessoa> listaPessoa = pessoaService.obterListaPessoaPorTermo(termo);
-        return new ResponseEntity<>(listaPessoa, HttpStatus.OK);
+    public ResponseEntity<List<PessoaDTO>> obterPessoaPorTermo(@RequestParam(name = "t") String termo) {
+        List<Pessoa> listaPessoa = service.obterListaPessoaPorTermo(termo);
+        return new ResponseEntity<>(mapper.toDTOs(listaPessoa), HttpStatus.OK);
     }
 
     @GetMapping("/contagem-pessoas")
@@ -44,7 +47,7 @@ public class PessoaController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header(HttpHeaders.LOCATION, "/pessoas/" + pessoaSalva.getId().toString())
-                .body(pessoa);
+                .body(mapper.toDTO(pessoaSalva));
     }
 
 }
