@@ -30,7 +30,10 @@ public class Pessoa {
 
     private LocalDate nascimento;
 
-    @ElementCollection
-    private List<String> stack;
+    private String stack;
+
+    @Version
+    @Column(nullable = false)
+    private Integer version;
 
 }
