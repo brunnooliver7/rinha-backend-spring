@@ -11,7 +11,11 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-@Table(schema = "rinha", name = "pessoa")
+@Table(schema = "rinha", name = "pessoa", indexes = {
+        @Index(columnList = "id", name = "idx_id"),
+        @Index(columnList = "apelido", name = "idx_apelido"),
+        @Index(columnList = "nome", name = "idx_nome"),
+        @Index(columnList = "stack", name = "idx_stack")})
 public class Pessoa {
 
     @Id
