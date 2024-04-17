@@ -5,12 +5,11 @@ import bruno.rinhabackendjava.entity.Pessoa;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.WARN)
+@Mapper
 public interface PessoaMapper {
 
     @Mapping(target = "version", ignore = true)
