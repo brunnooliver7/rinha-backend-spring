@@ -12,10 +12,10 @@
     </parent>
 
     <groupId>bruno</groupId>
-    <artifactId>rinha-backend-java</artifactId>
+    <artifactId>rinha-backend-spring</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>rinha-backend-java</name>
-    <description>rinha-backend-java</description>
+    <name>rinha-backend-spring</name>
+    <description>rinha-backend-spring</description>
 
     <properties>
         <java.version>11</java.version>

@@ -20,7 +20,7 @@ RUN mvn clean install
 FROM openjdk:11-jdk-slim
 
 # Copia o arquivo JAR da fase anterior da construção para a imagem final
-COPY --from=build /app/target/rinha-backend-java-0.0.1-SNAPSHOT.jar /app/
+COPY --from=build /app/target/rinha-backend-spring-0.0.1-SNAPSHOT.jar /app/
 
 # Defina o ponto de entrada
-ENTRYPOINT ["java","-jar","/app/rinha-backend-java-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java","-jar","/app/rinha-backend-spring-0.0.1-SNAPSHOT.jar"]
