@@ -14,11 +14,9 @@ import java.util.UUID;
 @Repository
 public interface PessoaRepository extends JpaRepository<Pessoa, UUID> {
 
-    @Query(value = " SELECT p.* " +
+    @Query(value = "SELECT p.* " +
             "FROM pessoa p " +
-            "WHERE LOWER(p.apelido) LIKE LOWER(CONCAT('%', :termo, '%')) " +
-            "OR LOWER(p.nome) LIKE LOWER(CONCAT('%', :termo, '%'))" +
-            "OR LOWER(p.stack) LIKE LOWER(CONCAT('%', :termo, '%'))",
+            "WHERE LOWER(termo) LIKE LOWER(CONCAT('%', :termo, '%'))",
             nativeQuery = true)
     List<Pessoa> findByTermo(@Param("termo") String termo);
 
