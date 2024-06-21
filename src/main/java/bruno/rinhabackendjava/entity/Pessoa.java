@@ -1,20 +1,21 @@
 package bruno.rinhabackendjava.entity;
 
+import java.util.List;
+import java.util.UUID;
+
+import javax.persistence.Column;
+import javax.persistence.Convert;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+
 import bruno.rinhabackendjava.converter.StringListConverter;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.Length;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
-import java.time.Year;
-import java.time.YearMonth;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.List;
-import java.util.UUID;
 
 @Getter
 @Setter
@@ -46,11 +47,6 @@ public class Pessoa {
     private List<String> stack;
 
     public boolean invalido() {
-//        var apelidoValido = apelido != null && !apelido.isEmpty() && apelido.length() < 32;
-//        var nomeValido = nome != null && !nome.isEmpty() && nome.length() < 100;
-//        var nascimentoValido = nascimento != null && isValidDate(nascimento);
-//        var stackValida = stack != null && stack.stream().allMatch(value -> value != null && value.length() < 32);
-//        return apelidoValido && nomeValido && nascimentoValido && stackValida;
         return (apelido == null || apelido.isBlank() || apelido.length() > 32
                 || nome == null || nome.isBlank() || nome.length() > 100
                 || isInvalidStack());
@@ -68,15 +64,6 @@ public class Pessoa {
         }
 
         return false;
-    }
-
-    private boolean isValidDate(String dateAsString) {
-        try {
-            DateTimeFormatter.ofPattern("yyyy[-MM[-dd]]").parseBest(dateAsString, LocalDate::from, YearMonth::from, Year::from);
-            return true;
-        } catch (DateTimeParseException e) {
-            return false;
-        }
     }
 
 }
