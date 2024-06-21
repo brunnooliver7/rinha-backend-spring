@@ -7,7 +7,6 @@ CREATE TABLE IF NOT EXISTS rinha.pessoa
     nome       varchar(100) not null,
     nascimento varchar(10)  not null,
     stack      text         null,
-    version    int,
     termo     TEXT GENERATED ALWAYS AS (nome || apelido || stack) STORED
 );
 

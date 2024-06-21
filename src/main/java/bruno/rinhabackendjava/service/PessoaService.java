@@ -14,20 +14,16 @@ public class PessoaService {
 
     private final PessoaRepository pessoaRepository;
 
+    public void criarPessoa(Pessoa pessoa) {
+        pessoaRepository.save(pessoa);
+    }
+
     public Pessoa obterPessoaPorId(UUID id) {
         return pessoaRepository.findById(id).orElseThrow();
     }
 
-    public Boolean apelidoExiste(String apelido) {
-        return pessoaRepository.existsByApelido(apelido);
-    }
-
     public List<Pessoa> obterListaPessoaPorTermo(String termo) {
         return pessoaRepository.findByTermo(termo);
-    }
-
-    public Pessoa criarPessoa(Pessoa pessoa) {
-        return pessoaRepository.salvar(pessoa);
     }
 
     public long countPessoas() {

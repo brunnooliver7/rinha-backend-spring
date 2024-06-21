@@ -1,8 +1,6 @@
 package bruno.rinhabackendjava.controller;
 
-import bruno.rinhabackendjava.dto.PessoaDTO;
 import bruno.rinhabackendjava.entity.Pessoa;
-import bruno.rinhabackendjava.mapper.PessoaMapper;
 import bruno.rinhabackendjava.service.PessoaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -10,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,44 +16,43 @@ import java.util.UUID;
 public class PessoaController {
 
     private final PessoaService service;
-    private final PessoaMapper mapper;
+
+    @PostMapping("/pessoas")
+    public ResponseEntity<Pessoa> criarPessoa(@RequestBody Pessoa pessoa) {
+        try {
+            if (pessoa.invalido()) throw new Exception();
+            pessoa.setId(UUID.randomUUID());
+            service.criarPessoa(pessoa);
+            return ResponseEntity
+                    .status(HttpStatus.CREATED)
+                    .header(HttpHeaders.LOCATION, "/pessoas/" + pessoa.getId().toString())
+                    .build();
+        } catch (Exception e) {
+            return ResponseEntity
+                    .status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .build();
+        }
+    }
 
     @GetMapping("/pessoas/{id}")
-    public ResponseEntity<PessoaDTO> obterPessoaPorId(@PathVariable UUID id) {
+    public ResponseEntity<Pessoa> obterPessoaPorId(@PathVariable UUID id) {
         try {
             Pessoa pessoa = service.obterPessoaPorId(id);
-            return new ResponseEntity<>(mapper.toDTO(pessoa), HttpStatus.OK);
+            return new ResponseEntity<>(pessoa, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @GetMapping("/pessoas")
-    public ResponseEntity<List<PessoaDTO>> obterPessoaPorTermo(@RequestParam(name = "t") String termo) {
+    public ResponseEntity<List<Pessoa>> obterPessoaPorTermo(@RequestParam(name = "t") String termo) {
         List<Pessoa> listaPessoa = service.obterListaPessoaPorTermo(termo);
-        return new ResponseEntity<>(mapper.toDTOs(listaPessoa), HttpStatus.OK);
+        return new ResponseEntity<>(listaPessoa, HttpStatus.OK);
     }
 
     @GetMapping("/contagem-pessoas")
     public long contagem() {
         return service.countPessoas();
-    }
-
-    @PostMapping("/pessoas")
-    public ResponseEntity<PessoaDTO> criarPessoa(@RequestBody @Valid PessoaDTO dto) {
-        if (Boolean.TRUE.equals(service.apelidoExiste(dto.getApelido()))) {
-            return ResponseEntity
-                    .status(HttpStatus.UNPROCESSABLE_ENTITY)
-                    .body(null);
-        }
-
-        Pessoa pessoa = mapper.fromDTO(dto);
-        Pessoa pessoaSalva = service.criarPessoa(pessoa);
-
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .header(HttpHeaders.LOCATION, "/pessoas/" + pessoaSalva.getId().toString())
-                .body(mapper.toDTO(pessoaSalva));
     }
 
 }
